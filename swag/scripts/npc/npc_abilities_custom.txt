@@ -1,0 +1,1134 @@
+
+// Dota Abilities Override File
+"DOTAAbilities"
+{
+  "Version"   "1"
+
+  "containers_lua_targeting"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+    "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_BOTH"
+    //"AbilityUnitTargetType"     "DOTA_UNIT_TARGET_ALL"
+    "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_ALL"
+    "AbilityUnitDamageType"     "DAMAGE_TYPE_MAGICAL" 
+    "BaseClass"         "ability_lua"
+    "AbilityTextureName"        "rubick_empty1"
+    "ScriptFile"          "libraries/abilities/containers_lua_targeting"
+    "MaxLevel"            "1"
+    "IsCastableWhileHidden" "1"
+    
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"        "0"
+    "AbilityCastPoint"        "0.0"
+
+    // Time   
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"       "0"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"       "0 0 0 0"
+  }
+
+  "containers_lua_targeting_tree"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+    "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_BOTH"
+    //"AbilityUnitTargetType"     "DOTA_UNIT_TARGET_ALL"
+    "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_ALL | DOTA_UNIT_TARGET_TREE"
+    "AbilityUnitDamageType"     "DAMAGE_TYPE_MAGICAL" 
+    "BaseClass"         "ability_lua"
+    "AbilityTextureName"        "rubick_empty1"
+    "ScriptFile"          "libraries/abilities/containers_lua_targeting_tree"
+    "MaxLevel"            "1"
+    "IsCastableWhileHidden" "1"
+    
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"        "0"
+    "AbilityCastPoint"        "0.0"
+
+    // Time   
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"       "0"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"       "0 0 0 0"
+  }
+  
+  "example_ability"
+  {
+    "ID"              "1852"
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"      "holdout_blade_fury"
+
+    // Stats
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"        "1000"
+    "AbilityCastPoint"        "0.0"
+    "AbilityCooldown"       "10.0"
+    "AbilityChannelTime"      "2.0 1.8 1.6 1.5"
+    "AbilityUnitDamageType"     "DAMAGE_TYPE_PURE"
+    "AbilityCastAnimation"      "ACT_DOTA_DISABLED"
+    "AbilityDamage"         "400 600 800 1000"
+    
+    "precache"
+    {
+      "particle"          "particles/econ/generic/generic_aoe_explosion_sphere_1/generic_aoe_explosion_sphere_1.vpcf"
+      "soundfile"         "soundevents/game_sounds_heroes/game_sounds_gyrocopter.vsndevts"
+    }
+
+    // Item Info
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"       "300"
+    "SideShop"            "1"
+    
+    "OnSpellStart"
+    {
+      "ApplyModifier"
+      {
+        "Target"    "CASTER"
+        "ModifierName"  "modifier_channel_start"
+      }
+      "FireSound"
+      {
+        "EffectName"    "Hero_Gyrocopter.CallDown.Fire"
+        "Target"      "CASTER"
+      }
+    }
+    
+    "OnChannelSucceeded"
+    {
+      "RemoveModifier"
+      {
+        "Target"        "CASTER"
+        "ModifierName"      "modifier_channel_start"
+      }
+      "AttachEffect"
+      {
+        "EffectName"      "particles/econ/generic/generic_aoe_explosion_sphere_1/generic_aoe_explosion_sphere_1.vpcf"
+        "EffectAttachType"    "follow_origin"
+        "EffectRadius"      "%radius"
+        "EffectDurationScale" "1"
+        "EffectLifeDurationScale" "1"
+        "EffectColorA"      "255 0 0"
+        "EffectColorB"      "255 0 0"
+        "Target"      "CASTER"
+      }
+      
+      "Damage"
+      {
+        "Type"          "DAMAGE_TYPE_PURE"
+        "Damage"        "%damage"
+        "Target"
+        {
+          "Center"      "CASTER"
+          "Radius"      "%radius"
+          "Teams"       "DOTA_UNIT_TARGET_TEAM_ENEMY"
+          "Types"       "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        }
+      }
+      
+      "Knockback"
+      {
+        "Center"  "CASTER"
+        "Target"
+        {
+          "Center"  "CASTER"
+          "Radius"  "%radius"
+          "Teams"   "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        }
+        "Duration"  "%duration"
+        "Distance"  "%distance"
+        "Height"  "%height"
+      }
+      
+      "FireSound"
+      {
+        "EffectName"    "Hero_Gyrocopter.CallDown.Damage"
+        "Target"      "CASTER"
+      }
+    }
+    
+    "OnChannelFinish"
+    {
+      "RemoveModifier"
+      {
+        "Target"        "CASTER"
+        "ModifierName"      "modifier_channel_start"
+      }
+    }
+    
+    "OnChannelInterrupted"
+    {
+      "RemoveModifier"
+      {
+        "Target"    "CASTER"
+        "ModifierName"  "modifier_channel_start"
+      }
+    }
+    
+    "Modifiers"
+    {
+      "modifier_channel_start"
+      {
+        "OnCreated"
+        {
+          "AttachEffect"
+          {
+            "IsHidden" "1"
+            "EffectName"    "particles/test_particle/channel_field_2.vpcf"//"gyro_calldown_marker_c"//"gyrocopter_call_down"
+            "EffectAttachType"  "follow_origin"
+            "Target"      "CASTER"
+            
+            "EffectRadius"      "%radius"
+            "EffectColorA"      "255 0 0"
+            "EffectColorB"      "255 0 0"
+          
+            "ControlPoints"
+            {
+              "00"    "50 100 5"
+            }
+          }
+        }
+      }
+    }
+    
+    // Special  
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+      "01"
+      {
+        "var_type"        "FIELD_FLOAT"
+        "duration"        "0.5"
+      }
+      
+      "02"
+      {
+        "var_type"        "FIELD_INTEGER"
+        "damage"        "400 600 800 1000"
+      }
+      
+      "03"
+      {
+        "var_type"        "FIELD_INTEGER"
+        "radius"        "550 550 600 650"
+      }
+      
+      "04"
+      {
+        "var_type"        "FIELD_INTEGER"
+        "distance"        "400 500 600 700"
+      }
+      
+      "05"
+      {
+        "var_type"        "FIELD_INTEGER"
+        "height"        "100 200 300 400"
+      }
+    }
+  }
+  
+//-------------------
+// Dummy stuff
+//-------------------
+  
+  "dummy_unit"
+  {
+    "AbilityBehavior"     "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"            "rubick_empty1"
+    "MaxLevel"                      "1"
+    
+    "Modifiers"
+    {
+      "dummy_unit"
+      {
+          "Passive"                        "1"
+          "IsHidden"                        "1"    
+          "States"
+          {
+              "MODIFIER_STATE_UNSELECTABLE" "MODIFIER_STATE_VALUE_ENABLED"
+              "MODIFIER_STATE_INVULNERABLE"    "MODIFIER_STATE_VALUE_ENABLED"
+              "MODIFIER_STATE_NOT_ON_MINIMAP" "MODIFIER_STATE_VALUE_ENABLED"
+              "MODIFIER_STATE_NO_HEALTH_BAR"  "MODIFIER_STATE_VALUE_ENABLED"
+          }
+      }
+    }
+  }
+  
+  "barebones_empty1"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    //"ID"              "5343"                            // unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+    "MaxLevel"            "0"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"            "rubick_empty1"
+  }
+  
+  "barebones_empty2"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    //"ID"              "5343"                            // unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+    "MaxLevel"            "0"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"            "rubick_empty1"
+  }
+  
+  "barebones_empty3"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    //"ID"              "5343"                            // unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+    "MaxLevel"            "0"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"            "rubick_empty1"
+  }
+  
+  "barebones_empty4"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    //"ID"              "5343"                            // unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+    "MaxLevel"            "0"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"            "rubick_empty1"
+  }
+  
+  "barebones_empty5"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    //"ID"              "5343"                            // unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+    "MaxLevel"            "0"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"            "rubick_empty1"
+  }
+  
+  "barebones_empty6"
+  {
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    //"ID"              "5343"                            // unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+    "MaxLevel"            "0"
+    "BaseClass"           "ability_datadriven"
+    "AbilityTextureName"            "rubick_empty1"
+  }
+
+ 	// Rewrite of Slark's Essence Shift
+	// Author: Rook
+	// Date: January 28, 2015
+	//modified by Tanner Russell
+	
+	"slark_essence_shift_datadriven"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"						"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_YES"
+		"AbilityTextureName" 			"slark_essence_shift"
+		"MaxLevel"            "7"
+		
+		
+	
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"agi_gain"				"1 2 3 4 5 6 7"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"stat_loss"				"-1 -1 -2 -2 -3 -3 -4"
+			}
+
+		}
+		
+		
+		"Modifiers"
+		{
+			"modifier_slark_essence_shift_datadriven"  //This modifier is always on Slark and simply triggers a script when an autoattack lands on an enemy.
+			{
+				"Passive"   "1"
+				"IsHidden"  "1"
+				
+				"OnAttackLanded"
+				{
+					"RunScript"
+					{
+						"ScriptFile"        		"heroes/hero_slark/essence_shift.lua"
+						"Function"         			"modifier_slark_essence_shift_datadriven_on_attack_landed"
+						"StatLoss"					"%stat_loss"
+					}
+				}
+			}
+			"modifier_slark_essence_shift_datadriven_buff_counter"  //A visible counter that will appear in Slark's modifier bar.
+			{
+				
+				"Passive"			"0"
+				"IsHidden"			"0"
+				"Attributes"			"MODIFIER_ATTRIBUTE_PERMANENT"
+			}
+			"modifier_slark_essence_shift_datadriven_debuff_counter"  //A visible counter that will appear in Slark's target's modifier bar.
+			{
+				
+				"Passive"			"0"
+				"IsHidden"			"0"
+				"IsBuff"			"0"
+				"IsDebuff"			"1"
+				"IsPurgable"		"0"
+				"Attributes"			"MODIFIER_ATTRIBUTE_PERMANENT"
+			}
+			"modifier_slark_essence_shift_datadriven_buff"
+			{
+				
+				"Passive"				"0"
+				"IsHidden"  			"1"
+				"Attributes"			"MODIFIER_ATTRIBUTE_MULTIPLE | MODIFIER_ATTRIBUTE_PERMANENT"
+				
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_AGILITY_BONUS"		"%agi_gain"
+					"MODIFIER_PROPERTY_STATS_STRENGTH_BONUS"		"%agi_gain"
+					"MODIFIER_PROPERTY_STATS_INTELLECT_BONUS"		"%agi_gain"
+				}
+				
+
+			}
+			"modifier_slark_essence_shift_datadriven_debuff"
+			{
+				
+				"Passive"				"0"
+				"IsHidden"  			"1"
+				"Attributes"			"MODIFIER_ATTRIBUTE_MULTIPLE | MODIFIER_ATTRIBUTE_PERMANENT"
+				
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_STRENGTH_BONUS"		"%stat_loss"
+					"MODIFIER_PROPERTY_STATS_AGILITY_BONUS"			"%stat_loss"
+					"MODIFIER_PROPERTY_STATS_INTELLECT_BONUS"		"%stat_loss"
+				}
+				
+				
+			}
+		}
+	}
+
+
+		"super_buff_datadriven"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"						"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_AOE"
+		
+		"AbilityTextureName" 			"warchasers_buff"
+		"MaxLevel"            			"4"
+		"AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+		"AbilityUnitTargetType"          "DOTA_UNIT_TARGET_HERO"
+		"AbilityManaCost" 				"200 300 400 500"
+		"AbilityCooldown" 				"80 90 100 110"
+		"AoERadius" 					"550"
+		
+	
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+		"01"
+     	 {
+      	  "var_type"        "FIELD_FLOAT"
+     	   "duration"        "3.0 4.0 5.0 6.0"
+     	 }
+     	 "02"
+     	 {
+      	  "var_type"        "FIELD_INTEGER"
+     	   "AOE"       		 "550"
+     	 }
+     	 "03"
+     	  {
+      	  "var_type"        "FIELD_INTEGER"
+     	   "statbuff"        "50 60 70 80"
+     	 }
+
+
+
+		}
+
+
+    
+    "OnSpellStart"
+    {
+      "ApplyModifier"
+      {
+        "Target"    "CASTER"
+        "ModifierName"  "modifier_super_buff_datadriven"
+      }
+      "FireSound"
+      {
+        "EffectName"    "Hero_Gyrocopter.CallDown.Fire"
+        "Target"      "CASTER"
+      }
+    }
+		   
+		
+		
+		"Modifiers"
+		{
+			"modifier_super_buff_datadriven"  
+			{
+				"Passive"   "0"
+				"IsHidden"  "0"
+			    "Duration"         "%duration"
+    
+    			"TextureName"      "warchasers_buff"
+
+  				  "IsDebuff"         "0"
+    				
+   				 "IsPurgable"       "0"
+   				 "IsBuff" "1"
+				
+				"Attributes"			"MODIFIER_ATTRIBUTE_MULTIPLE"
+
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_AGILITY_BONUS"		"%statbuff"
+					"MODIFIER_PROPERTY_STATS_STRENGTH_BONUS"		"%statbuff"
+					"MODIFIER_PROPERTY_STATS_INTELLECT_BONUS"		"%statbuff"
+				}
+					
+				
+			}
+
+		}
+	}
+
+
+	"sniper_assassinate_datadriven"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityType"                   "DOTA_ABILITY_TYPE_BASIC"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_DIRECTIONAL | DOTA_ABILITY_BEHAVIOR_NORMAL_WHEN_STOLEN"
+    "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+    "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"   
+    "FightRecapLevel"               "2"
+    "AbilityTextureName"            "sniper_assassinate"
+    
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"              "2000 2500 3000"
+    "AbilityCastRangeBuffer"        "600"
+    "AbilityCastPoint"              "2.0 2.0 2.0"
+
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "0.0" // 20.0 15.0 10.0"
+
+    // Damage.
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityDamage"                 "355 505 655"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "0" // 175 275 375"
+    
+    // Stats
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityModifierSupportValue"   "0.0"   // Modifier just does damage
+
+    // Special
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"                  "FIELD_INTEGER"
+            "projectile_speed"          "2500 2500 2500"
+        }
+        "02"
+        {
+            "var_type"                  "FIELD_INTEGER"
+            "tooltip_range"             "2000 2500 3000"
+        }
+        // Extra variables
+        "03"
+        {
+            "var_type"                  "FIELD_FLOAT"
+            "charge_time"               "2.0"
+        }
+        "04"
+        {
+            "var_type"                  "FIELD_FLOAT"
+            "debuff_duration"           "4.0"
+        }
+    }
+    
+    // Data driven
+    //-------------------------------------------------------------------------------------------------------------
+    "precache"
+    {
+        "soundfile"                 "soundevents/game_sounds_heroes/game_sounds_sniper.vsndevts"
+        "particle"                  "particles/units/heroes/hero_sniper/sniper_assassinate.vpcf"
+        "particle"                  "particles/units/heroes/hero_sniper/sniper_crosshair.vpcf"
+    }
+    
+    "OnAbilityPhaseStart"
+    {
+        "FireSound"
+        {
+            "Target"                "CASTER"
+            "EffectName"            "Ability.AssassinateLoad"
+        }
+        
+        "ApplyModifier"
+        {
+            "Target"                "CASTER"
+            "ModifierName"          "modifier_assassinate_caster_datadriven"
+        }
+    
+        "ApplyModifier"
+        {
+            "Target"                "TARGET"
+            "ModifierName"          "modifier_assassinate_target_datadriven"
+        }
+        
+        "RunScript"
+        {
+            "ScriptFile"            "heroes/hero_sniper/assassinate.lua"
+            "Function"              "assassinate_register_target"
+        }
+    }
+    
+    "OnSpellStart"
+    {
+        "FireSound"
+        {
+            "Target"                "CASTER"
+            "EffectName"            "Ability.Assassinate"
+        }
+    
+        "TrackingProjectile"
+        {
+            "Target"                "TARGET"
+            "EffectName"            "particles/units/heroes/hero_sniper/sniper_assassinate.vpcf"
+            "Dodgeable"             "1"
+            "ProvidesVision"        "0"
+            "MoveSpeed"             "%projectile_speed"
+            "SourceAttachment"      "DOTA_PROJECTILE_ATTACHMENT_HITLOCATION"
+        }
+        
+        "FireSound"
+        {
+            "Target"                "CASTER"
+            "EffectName"            "Hero_Sniper.AssassinateProjectile"
+        }
+    }
+    
+    "OnProjectileHitUnit"
+    {
+        "FireSound"
+        {
+            "Target"                "TARGET"
+            "EffectName"            "Hero_Sniper.AssassinateDamage"
+        }
+    
+        "Damage"
+        {
+            "Target"                "TARGET"
+            "Damage"                "%AbilityDamage"
+            "Type"                  "DAMAGE_TYPE_MAGICAL"
+        }
+        
+        "RemoveModifier"
+        {
+            "Target"                "TARGET"
+            "ModifierName"          "modifier_assassinate_target_datadriven"
+        }
+    }
+    
+    "Modifiers"
+    {
+        "modifier_assassinate_caster_datadriven"
+        {
+            "Duration"              "%charge_time"
+        
+            "OnOrder"
+            {
+                "RemoveModifier"
+                {
+                    "Target"        "CASTER"
+                    "ModifierName"  "modifier_assassinate_caster_datadriven"
+                }
+                
+                "RunScript"
+                {
+                    "ScriptFile"            "heroes/hero_sniper/assassinate.lua"
+                    "Function"              "assassinate_remove_target"
+                }
+            }
+        }
+    
+        "modifier_assassinate_target_datadriven"
+        {
+            "IsHidden"              "0"
+            "IsPurgeble"            "0"
+            "IsDebuff"              "1"
+            "Duration"              "%debuff_duration"
+            
+            "EffectName"            "particles/units/heroes/hero_sniper/sniper_crosshair.vpcf"
+            "EffectAttachType"      "follow_overhead"
+            
+            "States"
+            {
+                "MODIFIER_STATE_INVISIBLE"          "MODIFIER_STATE_VALUE_DISABLED"
+                "MODIFIER_STATE_PROVIDES_VISION"    "MODIFIER_STATE_VALUE_ENABLED"
+            }
+        }
+    }
+}
+
+// Rewrite of the Mirana Sacred Arrow ability
+// Author: Pizzalol
+// Date: 26.09.2015.
+"mirana_arrow_datadriven"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_DIRECTIONAL | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+    "AbilityUnitDamageType"         "DAMAGE_TYPE_PHYSICAL"   
+    "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+    "FightRecapLevel"               "1"
+    "AbilityTextureName"            "sniper_assassinate"
+    "MaxLevel"						"8"
+
+    "precache"
+    {
+        "soundfile"                 "soundevents/game_sounds_heroes/game_sounds_sniper.vsndevts"
+        "particle"							"particles/units/heroes/hero_mirana/mirana_spell_arrow.vpcf"
+        "particle"                  "particles/units/heroes/hero_sniper/sniper_crosshair.vpcf"
+    }
+    
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"              "3000"
+    "AbilityCastPoint"              "0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5"
+
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "10 9.5 9 8.5 8 7.5 7 6.5"
+    "AbilityDuration"               "4 4.2 4.4 4.6 4.8 5 5.2 5.4"
+
+    // Damage.
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityDamage"                 "500 600 700 800 900 1000 1100 1200"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "45 50 55 60 65 70 75 80"
+
+    // Special
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "arrow_speed"       "2000.0 2050 2100 2150 2200 2250 2300 2350"
+        }
+        "02"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_width"       "115"
+        }
+        "03"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_range"       "3000"
+        }
+        "04"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_max_stunrange"   "2000"
+        }
+        "05"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "arrow_min_stun"    "2"
+        }
+        "06"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "arrow_max_stun"    "3"
+        }
+        "07"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_bonus_damage"    "150"
+        }
+        "08"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_vision"  "650"
+        }
+        "09"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_max_damagerange" "2000"
+        }
+        "10"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "vision_duration"   "3.0"
+        }
+    }
+
+    "OnSpellStart"
+    {
+        "FireSound"
+        {
+            "EffectName"            "Hero_Sniper.AssassinateProjectile"
+            "Target"                "CASTER"
+        }
+
+                "FireSound"
+        {
+            "Target"                "CASTER"
+            "EffectName"            "Ability.Assassinate"
+        }
+   
+
+
+        "LinearProjectile"
+        {
+            "Target"        "POINT"
+           "EffectName"    "particles/units/heroes/hero_mirana/mirana_spell_arrow.vpcf"
+            "MoveSpeed"     "%arrow_speed"
+            "StartRadius"   "%arrow_width"
+            "StartPosition" "attach_origin"
+            "EndRadius"     "%arrow_width"
+            "FixedDistance" "%arrow_range"
+            "TargetTeams"   "DOTA_UNIT_TARGET_TEAM_ENEMY"
+            "TargetTypes"   "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+            "TargetFlags"   "DOTA_UNIT_TARGET_FLAG_NONE"
+            "HasFrontalCone"    "0"
+            "ProvidesVision"    "1"
+            "VisionRadius"  "%arrow_vision"
+            "SourceAttachment"      "DOTA_PROJECTILE_ATTACHMENT_HITLOCATION"
+        }
+
+        "RunScript"
+        {
+            "ScriptFile"            "heroes/hero_mirana/arrow.lua"
+            "Function"              "LaunchArrow"
+            "Target"                "POINT"
+        }       
+    }
+
+
+
+
+   
+
+    "OnProjectileHitUnit"
+    {
+        "FireSound"
+        {
+            "EffectName"            "Hero_Sniper.AssassinateDamage"
+            "Target"
+            {
+                "Center"            "TARGET"
+                "Flags"             "DOTA_UNIT_TARGET_FLAG_DEAD"
+            }
+        }
+
+        "RunScript"
+        {
+            "ScriptFile"            "heroes/hero_mirana/arrow.lua"
+            "Function"              "ArrowHit"
+            "Target"                "TARGET"
+        }
+
+        "RunScript"
+        {
+            "ScriptFile"    "heroes/hero_mirana/arrow.lua"
+            "Function"      "ArrowVision"
+        }
+    }
+
+    "OnProjectileFinish"
+    {
+            "FireSound"
+        {
+            "Target"                "TARGET"
+            "EffectName"            "Hero_Sniper.AssassinateDamage"
+        }
+        "RunScript"
+        {
+            "ScriptFile"    "heroes/hero_mirana/arrow.lua"
+            "Function"      "ArrowVision"
+        }
+    }
+}
+
+"mirana_arrow_datadriven_Spin"
+{
+
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+"AbilityBehavior"  "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+    "AbilityTextureName"            "troll_warlord_whirling_axes_melee"
+		"AbilityType"     "DOTA_ABILITY_TYPE_BASIC"
+
+  
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+ 
+
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "10"
+    //"AbilityDuration"               "3.11 3.11 3.11 3.11"
+    "AbilityCastAnimation"         "ACT_DOTA_TAUNT_SNIPER"
+    "AnimationPlaybackRate" "2"
+
+    // Damage.
+    //-------------------------------------------------------------------------------------------------------------
+   // "AbilityDamage"                 "500 600 700 800"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "0"
+
+    // Special
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "spin_speed"       "15"
+        }
+    }
+   "OnSpellStart"
+    {
+        "ApplyModifier"
+    {
+        "ModifierName"  "modifier_rotating"
+        "Target"       "CASTER"
+    }
+    }
+"Modifiers"
+{ 
+    "modifier_rotating"
+    {
+        "ThinkInterval" "15" 
+        "OnIntervalThink"
+        {
+            "Rotate"
+            {
+                "Target"       "TARGET"
+                "PitchYawRoll"  "0 %spin_speed 0"
+            }
+        }
+    }
+}
+}
+
+
+// Rewrite of the Mirana Sacred Arrow ability
+// Author: Pizzalol
+// Date: 26.09.2015.
+"mirana_arrow_datadriven_real"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_DIRECTIONAL | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+    "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"   
+    "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+    "FightRecapLevel"               "1"
+    "AbilityTextureName"            "mirana_arrow"
+
+    // Precache
+    //-------------------------------------------------------------------------------------------------------------
+    "precache"
+    {
+        "soundfile"         "soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+        "particle"          "particles/units/heroes/hero_mirana/mirana_spell_arrow.vpcf"
+    }
+    
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"              "3000"
+    "AbilityCastPoint"              "0.5 0.5 0.5 0.5"
+
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "17.0"
+    "AbilityDuration"               "3.11 3.11 3.11 3.11"
+
+    // Damage.
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityDamage"                 "50 140 230 320"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "100 100 100 100"
+
+    // Special
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "arrow_speed"       "857.0"
+        }
+        "02"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_width"       "115"
+        }
+        "03"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_range"       "3000"
+        }
+        "04"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_max_stunrange"   "1500"
+        }
+        "05"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "arrow_min_stun"    "0.01"
+        }
+        "06"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "arrow_max_stun"    "5.0"
+        }
+        "07"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_bonus_damage"    "140"
+        }
+        "08"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_vision"  "650"
+        }
+        "09"
+        {
+            "var_type"          "FIELD_INTEGER"
+            "arrow_max_damagerange" "1500"
+        }
+        "10"
+        {
+            "var_type"          "FIELD_FLOAT"
+            "vision_duration"   "3.0"
+        }
+    }
+
+    "OnSpellStart"
+    {
+        "FireSound"
+        {
+            "EffectName"            "Hero_Mirana.ArrowCast"
+            "Target"                "CASTER"
+        }
+
+        "LinearProjectile"
+        {
+            "Target"        "POINT"
+            "EffectName"    "particles/units/heroes/hero_mirana/mirana_spell_arrow.vpcf"
+            "MoveSpeed"     "%arrow_speed"
+            "StartRadius"   "%arrow_width"
+            "StartPosition" "attach_origin"
+            "EndRadius"     "%arrow_width"
+            "FixedDistance" "%arrow_range"
+            "TargetTeams"   "DOTA_UNIT_TARGET_TEAM_ENEMY"
+            "TargetTypes"   "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+            "TargetFlags"   "DOTA_UNIT_TARGET_FLAG_NONE"
+            "HasFrontalCone"    "0"
+            "ProvidesVision"    "1"
+            "VisionRadius"  "%arrow_vision"
+        }
+
+        "RunScript"
+        {
+            "ScriptFile"            "heroes/hero_mirana/arrow.lua"
+            "Function"              "LaunchArrow"
+            "Target"                "POINT"
+        }       
+    }
+
+    "OnProjectileHitUnit"
+    {
+        "FireSound"
+        {
+            "EffectName"            "Hero_Mirana.ArrowImpact"
+            "Target"
+            {
+                "Center"            "TARGET"
+                "Flags"             "DOTA_UNIT_TARGET_FLAG_DEAD"
+            }
+        }
+
+        "RunScript"
+        {
+            "ScriptFile"            "heroes/hero_mirana/arrow.lua"
+            "Function"              "ArrowHit"
+            "Target"                "TARGET"
+        }
+
+        "RunScript"
+        {
+            "ScriptFile"    "heroes/hero_mirana/arrow.lua"
+            "Function"      "ArrowVision"
+        }
+    }
+
+    "OnProjectileFinish"
+    {
+        "RunScript"
+        {
+            "ScriptFile"    "heroes/hero_mirana/arrow.lua"
+            "Function"      "ArrowVision"
+        }
+    }
+}
+
+
+
+
+
+
+}
+
